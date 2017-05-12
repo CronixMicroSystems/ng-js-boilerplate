@@ -1,5 +1,4 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const WebpackBrowserPlugin = require('webpack-browser-plugin')
 
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const webpack = require('webpack')
@@ -95,7 +94,6 @@ module.exports = function () {
     plugins = [
       ...plugins,
       new webpack.HotModuleReplacementPlugin(),
-      new WebpackBrowserPlugin()
     ]
   }
   return {
