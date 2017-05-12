@@ -82,7 +82,7 @@ module.exports = function () {
           join_vars: true,
           cascade: true,
           side_effects: true,
-          warnings: true,
+          warnings: false,
           drop_console: false,
           keep_fnames: true,
           global_defs: {}
