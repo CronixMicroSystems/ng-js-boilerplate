@@ -44,7 +44,15 @@ module.exports = function () {
       verbose: false,
       id: 'scss',
       threads: 2,
-      loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+      loaders: ['style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            minimize: isProd
+          }
+        },
+        'postcss-loader',
+        'sass-loader']
     }),
     new HappyPack({
       verbose: false,
