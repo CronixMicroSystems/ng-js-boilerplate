@@ -5,6 +5,7 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const webpack = require('webpack')
 const HappyPack = require('happypack')
 const path = require('path')
+const autoprefixer = require('autoprefixer')
 
 const sourcePath = path.join(__dirname, './src')
 const staticsPath = path.join(__dirname, './static')
@@ -27,6 +28,13 @@ module.exports = function () {
     }),
     new FriendlyErrorsWebpackPlugin(),
     new ProgressBarPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        postcss: [
+          autoprefixer()
+        ]
+      }
+    }),
     new webpack.optimize.CommonsChunkPlugin({
       children: true,
       async: true,
