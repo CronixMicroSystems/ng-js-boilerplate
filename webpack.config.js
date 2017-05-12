@@ -115,7 +115,7 @@ module.exports = function () {
     ]
   }
   return {
-    devtool: 'source-map',
+    devtool: isProd ? '' : 'eval-source-map',
     cache: true,
     context: sourcePath,
     entry: { js: './index.js' },
