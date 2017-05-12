@@ -58,6 +58,7 @@
     "openpack": "^1.0.0",
     "outdated-browser-pro": "^1.0.0",
     "postcss-loader": "^1.3.3",
+    "progress-bar-webpack-plugin": "^1.9.3",
     "promise-polyfill": "^6.0.2",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",

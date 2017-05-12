@@ -1,5 +1,6 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const webpack = require('webpack')
 const HappyPack = require('happypack')
@@ -25,6 +26,7 @@ module.exports = function () {
       // 'windows.jQuery': 'jquery'
     }),
     new FriendlyErrorsWebpackPlugin(),
+    new ProgressBarPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
       children: true,
       async: true,
