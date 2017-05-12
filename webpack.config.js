@@ -1,7 +1,11 @@
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const webpack = require('webpack')
 const HappyPack = require('happypack')
 const path = require('path')
-// const autoprefixer = require('autoprefixer')
+const autoprefixer = require('autoprefixer')
 
 const sourcePath = path.join(__dirname, './src')
 const staticsPath = path.join(__dirname, './static')
@@ -10,10 +14,27 @@ module.exports = function () {
   const nodeEnv = process.env.NODE_ENV ? 'production' : 'development'
   const isProd = nodeEnv === 'production'
 
-  const plugins = [
-    new webpack.DefinePlugin({ 'process.env': { NODE_ENV: JSON.stringify(nodeEnv) } }),
+  let plugins = [
+    new webpack.DefinePlugin({
+      'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+    }),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.NamedModulesPlugin(),
+    new webpack.ProvidePlugin({
+      // $: 'jquery',
+      // jQuery: 'jquery',
+      // 'window.jQuery': 'jquery',
+      // 'windows.jQuery': 'jquery'
+    }),
+    new FriendlyErrorsWebpackPlugin(),
+    new ProgressBarPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        postcss: [
+          autoprefixer()
+        ]
+      }
+    }),
     new webpack.optimize.CommonsChunkPlugin({
       children: true,
       async: true,
@@ -23,7 +44,15 @@ module.exports = function () {
       verbose: false,
       id: 'scss',
       threads: 2,
-      loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+      loaders: ['style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            minimize: isProd
+          }
+        },
+        'postcss-loader',
+        'sass-loader']
     }),
     new HappyPack({
       verbose: false,
@@ -48,27 +77,45 @@ module.exports = function () {
   ]
   let methods = []
   if (isProd) {
-    plugins.push(
+    plugins = [
+      ...plugins,
+      ...typeof BundleAnalyzerPlugin === 'undefined' ? [] : [new BundleAnalyzerPlugin()],
       new webpack.optimize.UglifyJsPlugin({
         sourceMap: false,
         compress: {
-          warnings: false,
-          screw_ie8: true,
-          conditionals: true,
-          unused: true,
-          comparisons: true,
           sequences: true,
+          properties: true,
           dead_code: true,
+          drop_debugger: true,
+          unsafe: false,
+          conditionals: true,
+          comparisons: true,
           evaluate: true,
+          booleans: true,
+          loops: true,
+          unused: true,
+          hoist_funs: true,
+          hoist_vars: false,
           if_return: true,
-          join_vars: true
+          join_vars: true,
+          cascade: true,
+          side_effects: true,
+          warnings: false,
+          drop_console: false,
+          keep_fnames: true,
+          global_defs: {}
         },
         output: { comments: false }
       })
-    )
-  } else { plugins.push(new webpack.HotModuleReplacementPlugin()) }
+    ]
+  } else {
+    plugins = [
+      ...plugins,
+      new webpack.HotModuleReplacementPlugin(),
+    ]
+  }
   return {
-    devtool: isProd ? 'source-map' : 'eval',
+    devtool: isProd ? '' : 'eval-source-map',
     cache: true,
     context: sourcePath,
     entry: { js: './index.js' },
